@@ -1,12 +1,24 @@
 import React from 'react'
 
-const ActionButtons = ({handleReset}) => {
+const ActionButtons = ({ handleReset }) => {
   const handleClick = (message) => {
     alert(message)
   }
 
   return (
     <div className="w-full h-full flex items-center justify-around">
+      <button
+        className="bg-gray-600 bg-opacity-80 text-white py-2 px-4 rounded shadow hover:bg-gray-700"
+        onClick={() => handleClick('Button 2 clicked!')}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="float-left pr-1 size-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+        </svg>
+
+
+
+        Pause
+      </button>
       <button
         className="bg-gray-600 bg-opacity-80 text-white py-2 px-4 rounded shadow hover:bg-gray-700"
         onClick={() => handleClick('Button 1 clicked!')}
@@ -17,17 +29,7 @@ const ActionButtons = ({handleReset}) => {
 
         Start
       </button>
-      <button
-        className="bg-gray-600 bg-opacity-80 text-white py-2 px-4 rounded shadow hover:bg-gray-700"
-        onClick={() => handleClick('Button 2 clicked!')}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="float-left pr-1 size-6">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 7.5A2.25 2.25 0 0 1 7.5 5.25h9a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25h-9a2.25 2.25 0 0 1-2.25-2.25v-9Z" />
-        </svg>
 
-
-        Stop
-      </button>
       <button
         className="bg-gray-600 bg-opacity-80 text-white py-2 px-4 rounded shadow hover:bg-gray-700"
         onClick={handleReset}

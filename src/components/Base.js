@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../styles/directory.css';
 import { usePreview } from './usePreview';
 
-const ACCEPTED_TYPE='.mp4'
+const ACCEPTED_TYPE = '.mp4'
 
 const Loading = () => {
   return <div role="status" className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
@@ -17,44 +17,20 @@ const Loading = () => {
 
 function Base({ directorySetter, files, setFiles }) {
 
-  const [thumbnail, setThumbnail] = useState(null);
+
   const [thumbnailProperties, setThumbnailProperties] = useState({ width: 0, height: 0, size: 0 });
   const test_thumb = usePreview(files)
   const [isLoading, setIsLoading] = useState(false);
-  const getProperty = () => {
+  
 
-  }
+  
 
-
-
-  useEffect(() => {
-    if (files && files.length) {
-      const firstVideo = files[0]
-      if (firstVideo) {
-        const url = URL.createObjectURL(firstVideo);
-        
-
-        setThumbnail(url);
-
-        // Create an Image object to load the thumbnail and get its properties
-        const img = new Image();
-        img.onload = () => {
-          setThumbnailProperties({
-            width: img.width,
-            height: img.height,
-            size: firstVideo.size
-          });
-        };
-        img.src = url;
-      }
-    }
-  }, [files]);
 
   const openDirectory = async (mode = 'read') => {
-   setTimeout(() => {
+
     setIsLoading(true);
-   }, 500); 
-    setThumbnail(null);
+
+
     const supportsFileSystemAccess =
       'showDirectoryPicker' in window &&
       (() => {
@@ -67,35 +43,38 @@ function Base({ directorySetter, files, setFiles }) {
 
     if (supportsFileSystemAccess) {
       let directoryStructure = undefined;
-
+     
+   
       const getFiles = async (dirHandle, path = dirHandle.name) => {
         const dirs = [];
         const files = [];
-    
+
         for await (const entry of dirHandle.values()) {
-        
-            const nestedPath = `${path}/${entry.name}`;
-            if (entry.kind === 'file') {
-                if (entry.name.endsWith(ACCEPTED_TYPE)) { // Filter only mp4 files
-                    files.push(
-                        entry.getFile().then((file) => {
-                            file.directoryHandle = dirHandle;
-                            file.handle = entry;
-                            return Object.defineProperty(file, 'webkitRelativePath', {
-                                configurable: true,
-                                enumerable: true,
-                                get: () => nestedPath,
-                            });
-                        })
-                    );
-                }
-            } else if (entry.kind === 'directory') {
-                dirs.push(getFiles(entry, nestedPath));
+
+          const nestedPath = `${path}/${entry.name}`;
+
+          if (entry.kind === 'file') {
+            if (entry.name.endsWith(ACCEPTED_TYPE)) { // Filter only mp4 files
+              files.push(
+                entry.getFile().then((file) => {
+                  file.directoryHandle = dirHandle;
+                  file.handle = entry;
+                  return Object.defineProperty(file, 'webkitRelativePath', {
+                    configurable: true,
+                    enumerable: true,
+                    get: () => nestedPath,
+                  });
+                })
+              );
             }
+          } else if (entry.kind === 'directory') {
+
+            dirs.push(getFiles(entry, nestedPath));
+          }
         }
-    
+
         return [...(await Promise.all(dirs)).flat(), ...(await Promise.all(files))];
-    };
+      };
 
       try {
         const handle = await window.showDirectoryPicker({
@@ -105,22 +84,25 @@ function Base({ directorySetter, files, setFiles }) {
         directoryStructure = getFiles(handle, undefined);
       } catch (err) {
         if (err.name !== 'AbortError') {
-          console.error(err.name, err.message);
+          console.log(err.name, err.message);
         }
       }
+
       setIsLoading(false);
       return directoryStructure;
 
     }
 
     return new Promise((resolve) => {
+      console.log("hello");
       const input = document.createElement('input');
       input.type = 'file';
       input.webkitdirectory = true;
 
       input.addEventListener('change', () => {
-        let files = Array.from(input.files);
-        resolve(files);
+        let files_ = Array.from(input.files);
+        
+        resolve(files_);
       });
       if ('showPicker' in HTMLInputElement.prototype) {
         input.showPicker();
@@ -141,6 +123,7 @@ function Base({ directorySetter, files, setFiles }) {
 
 
     setFiles(Array.from(filesInDirectory));
+    // console.log(filesInDirectory[0].name);
 
     // Get folder name from the first file's path
     const folder_name = filesInDirectory.length > 0 ? filesInDirectory[0].webkitRelativePath.split('/')[0] : '';
@@ -160,7 +143,7 @@ function Base({ directorySetter, files, setFiles }) {
   };
 
   return (
-    <div className='flex justify-center items-center h-full' onClick={handleClick}>
+    <div className='flex justify-center items-center h-full' onClick={(e)=>{e.preventDefault();e.stopPropagation();handleClick()}}>
       {files && files.length ?
 
         <div className='relative w-full h-full overflow-hidden' onClick={e => e.stopPropagation()}>
@@ -173,7 +156,8 @@ function Base({ directorySetter, files, setFiles }) {
               size: event.target.size
             })
           }}
-            onError={() => {
+            onError={(error) => {
+              console.log(error);
               setIsLoading(false);
             }}
             className=' w-full h-full object-contain border-2 ' src={test_thumb} />
@@ -188,7 +172,7 @@ function Base({ directorySetter, files, setFiles }) {
         <button
           className="px-2 py-1 bg-light-2 bg-opacity-30 rounded-md text-light-2 text-lg hover:shadow-md hover:scale-105 active:scale-95"
           type="button"
-          onClick={handleClick}
+          onClick={(e)=>{e.preventDefault();e.stopPropagation();handleClick()}}
         >
           Open directory
         </button>}
