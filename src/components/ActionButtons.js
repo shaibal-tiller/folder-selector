@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ActionButtons = ({ handleReset }) => {
+const ActionButtons = ({ handleReset, disableStatus,handleStart }) => {
   const handleClick = (message) => {
     alert(message)
   }
@@ -20,8 +20,9 @@ const ActionButtons = ({ handleReset }) => {
         Pause
       </button>
       <button
-        className="bg-gray-600 bg-opacity-80 text-white py-2 px-4 rounded shadow hover:bg-gray-700"
-        onClick={() => handleClick('Button 1 clicked!')}
+        disabled={disableStatus}
+        className="bg-gray-600 bg-opacity-80 text-white py-2 px-4 rounded shadow hover:bg-gray-700 disabled:cursor-not-allowed"
+        onClick={handleStart}
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="float-left pr-1 size-6">
           <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />

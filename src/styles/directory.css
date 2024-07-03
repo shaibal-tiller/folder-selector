@@ -56,3 +56,41 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
   
+
+
+  .rectangle-item {
+    position: relative;
+    padding: 8px;
+  }
+  
+  .rectangle-item:hover .rectangle-buttons {
+    display: block;
+  }
+  
+  .rectangle-buttons {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  
+  .rectangle-buttons button {
+    margin-left: 4px;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 2px 5px;
+  }
+  
+  .rectangle-buttons button.copy {
+    background-color: #008CBA; /* Blue */
+  }
+  
+  .rectangle-buttons button.remove {
+    background-color: #f44336; /* Red */
+  }

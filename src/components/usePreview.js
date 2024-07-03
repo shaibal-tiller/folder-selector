@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
 
-export const usePreview = (files) => {
-    let url = null;
-
-    if (files && files.length) {
-        const firstVideo = files[0];
-
-        if (firstVideo) {
-            url = URL.createObjectURL(firstVideo);
-            console.log(url);
-        }
-    }
-
+export const usePreview = (files, setLoading) => {
+    const [error, setError] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
+    const [imageSize, setImageSize] = useState(0); // New state for image size
 
     useEffect(() => {
-        if (!url) {
-            console.log("returning");
+        setError(null)
+        if (!files || !files.length) {
+            setLoading(false);
+            setImageUrl(null)
             return;
         }
+
+        const firstVideo = files[0];
+        if (!firstVideo) {
+            setLoading(false);
+            return;
+        }
+
+        const url = URL.createObjectURL(firstVideo);
 
         const video = document.createElement("video");
         video.src = url;
@@ -34,15 +35,27 @@ export const usePreview = (files) => {
             const canvasToURL = newCanvas.toDataURL();
 
             setImageUrl(canvasToURL);
+
+            // Convert base64 URL to Blob and calculate size
+            const byteString = atob(canvasToURL.split(',')[1]);
+            const byteArray = new Uint8Array(byteString.length);
+            for (let i = 0; i < byteString.length; i++) {
+                byteArray[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([byteArray], { type: 'image/png' });
+            setImageSize(blob.size);
+
+            setLoading(false);
+            URL.revokeObjectURL(url);  // Clean up the object URL
         };
 
         const onLoadMetadata = () => {
+            setError(null);
             video.currentTime = 0;
         };
 
         const onError = (e) => {
-
-            console.log(e);
+            setError(e.target?.error?.message);
             // Fallback if metadata is not available
             const newCanvas = document.createElement("canvas");
             newCanvas.width = 640; // Default width
@@ -53,11 +66,25 @@ export const usePreview = (files) => {
             const canvasToURL = newCanvas.toDataURL();
 
             setImageUrl(canvasToURL);
+
+            // Convert base64 URL to Blob and calculate size
+            const byteString = atob(canvasToURL.split(',')[1]);
+            const byteArray = new Uint8Array(byteString.length);
+            for (let i = 0; i < byteString.length; i++) {
+                byteArray[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([byteArray], { type: 'image/png' });
+            setImageSize(blob.size);
+
+            setLoading(false);
+            URL.revokeObjectURL(url);  // Clean up the object URL
         };
 
         video.addEventListener("seeked", onSeeked);
         video.addEventListener("loadedmetadata", onLoadMetadata);
         video.addEventListener("error", onError);
+
+        setLoading(true);
 
         return () => {
             video.removeEventListener("seeked", onSeeked);
@@ -65,9 +92,9 @@ export const usePreview = (files) => {
             video.removeEventListener("error", onError);
             video.pause();
             video.src = "";
+            URL.revokeObjectURL(url);  // Clean up the object URL
         };
-    }, [url]);
+    }, [files, setLoading]);
 
-    console.log(imageUrl);
-    return imageUrl;
+    return { error, imageUrl, imageSize }; // Return image size
 };
