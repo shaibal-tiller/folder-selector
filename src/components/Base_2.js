@@ -1,25 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-const Base_2 = ({ setMarkers_, imageUrl, imageSize, }) => {
+const Base_2 = ({ markers_,setMarkers_, imageUrl, imageSize, }) => {
+    console.log(markers_);
+    
+    
     const canvasRef = useRef(null);
     const [baseImage, setBaseImage] = useState(null);
-    const [markers, setMarkers] = useState([]);
+    const [markers, setMarkers] = useState(markers_ ||[]);
     const [currentPoints, setCurrentPoints] = useState([]);
     const [log, setLog] = useState([]);
 
-    // const updateLog = (points) => {
-    //     const logEntries = points.map((point, index) => ({
-    //         timestamp: new Date(),
-    //         rectIndex: markers.length + 1,
-    //         point,
-    //         pointIndex: index + 1
-    //     }));
-
-    //     setLog((prevLog) => {
-    //         const updatedLog = [...prevLog.filter(logEntry => logEntry.rectIndex !== markers.length + 1), ...logEntries];
-    //         return updatedLog;
-    //     });
-    // };
+    
 
     const updateRectangleLog = () => {
         const newMarker = { p1: currentPoints[0], p2: currentPoints[1], p3: currentPoints[2], p4: currentPoints[3] };

@@ -8,6 +8,7 @@ export const usePreview = (files, setLoading) => {
     useEffect(() => {
         setError(null)
         if (!files || !files.length) {
+
             setLoading(false);
             setImageUrl(null)
             return;
@@ -20,12 +21,13 @@ export const usePreview = (files, setLoading) => {
         }
 
         const url = URL.createObjectURL(firstVideo);
-
         const video = document.createElement("video");
         video.src = url;
         video.crossOrigin = "anonymous";
 
+
         const onSeeked = () => {
+           
             const newCanvas = document.createElement("canvas");
             newCanvas.width = video.videoWidth;
             newCanvas.height = video.videoHeight;
@@ -50,11 +52,13 @@ export const usePreview = (files, setLoading) => {
         };
 
         const onLoadMetadata = () => {
+       
             setError(null);
             video.currentTime = 0;
         };
 
         const onError = (e) => {
+
             setError(e.target?.error?.message);
             // Fallback if metadata is not available
             const newCanvas = document.createElement("canvas");
@@ -79,14 +83,22 @@ export const usePreview = (files, setLoading) => {
             setLoading(false);
             URL.revokeObjectURL(url);  // Clean up the object URL
         };
+      
+
 
         video.addEventListener("seeked", onSeeked);
+       
+     
+        
         video.addEventListener("loadedmetadata", onLoadMetadata);
         video.addEventListener("error", onError);
-
         setLoading(true);
 
+
         return () => {
+ 
+
+
             video.removeEventListener("seeked", onSeeked);
             video.removeEventListener("loadedmetadata", onLoadMetadata);
             video.removeEventListener("error", onError);

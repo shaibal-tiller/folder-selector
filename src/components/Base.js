@@ -6,16 +6,22 @@ import Loading, { Error } from './Loading';
 import FilePreview from './FilePreview';
 import Base_2 from './Base_2.js';
 import VideoStreamModal from './VideoStreamModal';
+import { marker } from 'leaflet';
 
 const ACCEPTED_TYPE = '.mp4';
 
-function Base({ directorySetter, files, setFiles, setMarkers_ }) {
+function Base({ directorySetter, files, setFiles, setMarkers_,markers_ }) {
   const [thumbnailProperties, setThumbnailProperties] = useState({ width: 0, height: 0, size: 0 });
   const [isLoading, setIsLoading] = useState(false);
   const { error, imageUrl, imageSize } = usePreview(files, setIsLoading);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+
+
+  
   useEffect(() => {
+    
+    
     if (!files?.length) {
 
       setThumbnailProperties({ width: 0, height: 0, size: 0 });
@@ -120,12 +126,12 @@ function Base({ directorySetter, files, setFiles, setMarkers_ }) {
           {error ? (
             <Error message="Image Extraction Failed with Error" />
           ) : (
-            <Base_2 setMarkers_={setMarkers_} imageUrl={imageUrl} imageSize={imageSize} />
+            <Base_2  markers_={markers_}  setMarkers_={setMarkers_} imageUrl={imageUrl} imageSize={imageSize} />
           )}
           <FilePreview files={files} thumbnailProperties={thumbnailProperties} />
         </div>
       ) : (
-        <DirectoryButton handleClick={handleClick} />  
+        <DirectoryButton handleClick={handleClick} />
       )}
       <VideoStreamModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
