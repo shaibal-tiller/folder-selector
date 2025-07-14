@@ -27,14 +27,14 @@ export const usePreview = (files, setLoading) => {
 
 
         const onSeeked = () => {
-           
+            video.crossOrigin = "anonymous";
             const newCanvas = document.createElement("canvas");
             newCanvas.width = video.videoWidth;
             newCanvas.height = video.videoHeight;
 
             const ctx = newCanvas.getContext("2d");
             ctx.drawImage(video, 0, 0);
-            const canvasToURL = newCanvas.toDataURL();
+            const canvasToURL = newCanvas?.toDataURL();
 
             setImageUrl(canvasToURL);
 
@@ -58,7 +58,7 @@ export const usePreview = (files, setLoading) => {
         };
 
         const onError = (e) => {
-
+            video.crossOrigin = "anonymous";
             setError(e.target?.error?.message);
             // Fallback if metadata is not available
             const newCanvas = document.createElement("canvas");
@@ -67,7 +67,7 @@ export const usePreview = (files, setLoading) => {
 
             const ctx = newCanvas.getContext("2d");
             ctx.drawImage(video, 0, 0, newCanvas.width, newCanvas.height);
-            const canvasToURL = newCanvas.toDataURL();
+            const canvasToURL = newCanvas?.toDataURL();
 
             setImageUrl(canvasToURL);
 
@@ -98,7 +98,7 @@ export const usePreview = (files, setLoading) => {
         return () => {
  
 
-
+            video.crossOrigin = "anonymous";
             video.removeEventListener("seeked", onSeeked);
             video.removeEventListener("loadedmetadata", onLoadMetadata);
             video.removeEventListener("error", onError);

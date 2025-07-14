@@ -147,11 +147,12 @@ const Textbox = ({ rectangle_markers, setRectangleMarkers }) => {
         return (
           <li key={markerIndex} className="rectangle-item whitespace-pre relative group">
             {/*    {Object.keys(marker)?.length ? `Rectangle-${markerIndex + 1}:` : ""} */}
-            <ul className='pl-2 text-xs flex justify-start items-start w-full flex-wrap'>
+            <ul className='border-green-400 border-[1px] pl-2 text-xs flex justify-start items-start w-full flex-wrap'>
+              <div className='absolute text-red text-xl select-none'>{index+1}</div>
               {Object.values(marker)?.map((entry, ind) => {
                 return `${entry?.x.toFixed(3)} , ${entry?.y.toFixed(3)}${ind % 2 !== 1 ? ' ,' : ""}`
               })?.map((el, ind) => (
-                <p key={ind} className={`${ind % 2 !== 1 ? 'text-green-500 text-end' : "text-red-500 text-start"} w-1/2`}>
+                <p key={ind} className={` ${ind % 2 !== 1 ? 'text-green-500 text-end' : "text-red-500 text-start"} w-1/2`}>
                   {` ${el}`}
                 </p>
               ))}
